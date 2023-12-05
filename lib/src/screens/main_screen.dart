@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/src/components/main_drawer.dart';
 import 'package:meals_app/src/data/dummy_data.dart';
 import 'package:meals_app/src/screens/catagories_screen.dart';
 import 'package:meals_app/src/screens/meals_screen.dart';
@@ -33,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: Text(_title)),
+      drawer: MainDrawer(),
       body: _content,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _changeScreen,
