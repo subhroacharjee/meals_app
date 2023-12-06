@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/src/data/dummy_data.dart';
-import 'package:meals_app/src/screens/meals_screen.dart';
 
 class MainDrawer extends StatelessWidget {
+  const MainDrawer({super.key, required this.onPressed});
+
+  final void Function(String) onPressed;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -38,7 +39,7 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.restaurant,
               size: 26,
               color: Colors.white,
@@ -48,19 +49,11 @@ class MainDrawer extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.white),
             ),
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) => MealsScreen(
-                    title: "All Meals",
-                    meals: dummyMeals,
-                    changeState: () {},
-                  ),
-                ),
-              );
+              onPressed("meals");
             },
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.settings,
               size: 26,
               color: Colors.white,
@@ -69,7 +62,9 @@ class MainDrawer extends StatelessWidget {
               'Filters',
               style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.white),
             ),
-            onTap: () {},
+            onTap: () {
+              onPressed("filters");
+            },
           )
         ],
       ),

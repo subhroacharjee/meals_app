@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/src/components/category_button.dart';
 import 'package:meals_app/src/data/dummy_data.dart';
+import 'package:meals_app/src/model/meals.dart';
 
 class CategoriesScreen extends StatefulWidget {
-  const CategoriesScreen({super.key});
+  const CategoriesScreen({super.key, required this.meals});
+  final List<Meal> meals;
   @override
   State<StatefulWidget> createState() => _CategoriesScreenState();
 }
@@ -20,7 +22,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
       children: availableCategories
           .map<Widget>(
-            (val) => CategoryButton(category: val),
+            (val) => CategoryButton(
+              category: val,
+              meals: widget.meals,
+            ),
           )
           .toList(),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meals_app/src/components/main_drawer.dart';
 import 'package:meals_app/src/data/dummy_data.dart';
 import 'package:meals_app/src/screens/catagories_screen.dart';
+import 'package:meals_app/src/screens/filters.dart';
 import 'package:meals_app/src/screens/meals_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,27 +15,60 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   String _title = "Categories";
   int _selectedIndex = 0;
-  Widget _content = const CategoriesScreen();
+  late Widget _content;
+  Map<Filter, bool> _selectedFilters = {
+    Filter.veg: false,
+    Filter.lactoseFree: false,
+    Filter.glutenFree: false,
+  };
+
+  void _onDrawerPressed(String identifier) async {
+    Navigator.pop(context);
+    if (identifier == "filters") {
+      final result = await Navigator.of(context).push<Map<Filter, bool>>(
+        MaterialPageRoute(
+          builder: (ctx) => FiltersScreen(
+            filters: _selectedFilters,
+          ),
+        ),
+      );
+      setState(() {
+        _selectedFilters = result ?? _selectedFilters;
+      });
+    }
+  }
 
   void _changeScreen(int idx) {
     setState(() {
-      _title = idx == 0 ? "Categories" : "Favorties";
-      _content = idx == 0
-          ? const CategoriesScreen()
-          : MealsScreen(
-              meals: dummyMeals.where((meal) => meal.isFavorite).toList(),
-              changeState: () => {_changeScreen(idx)},
-            );
       _selectedIndex = idx;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final availableMeals = dummyMeals.where((meal) {
+      if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) return false;
+      if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) return false;
+      if (_selectedFilters[Filter.veg]! && !meal.isVegetarian) return false;
+      return true;
+    }).toList();
+
+    _content = CategoriesScreen(meals: availableMeals);
+    _title = "Categories";
+
+    if (_selectedIndex == 1) {
+      _content = MealsScreen(
+          meals: dummyMeals.where((meal) => meal.isFavorite).toList(),
+          changeState: () {
+            _changeScreen(_selectedIndex);
+          });
+      _title = "Favorite Meals";
+    }
     return Scaffold(
       appBar: AppBar(title: Text(_title)),
-      drawer: MainDrawer(),
+      drawer: MainDrawer(
+        onPressed: _onDrawerPressed,
+      ),
       body: _content,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _changeScreen,
