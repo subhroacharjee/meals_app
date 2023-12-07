@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/src/components/main_drawer.dart';
-import 'package:meals_app/src/data/dummy_data.dart';
+import 'package:meals_app/src/providers/meals_provider.dart';
 import 'package:meals_app/src/screens/catagories_screen.dart';
 import 'package:meals_app/src/screens/filters.dart';
 import 'package:meals_app/src/screens/meals_screen.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends ConsumerState<MainScreen> {
   String _title = "Categories";
   int _selectedIndex = 0;
   late Widget _content;
@@ -46,7 +47,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableMeals = dummyMeals.where((meal) {
+    final meals = ref.watch(mealsProvider);
+    final availableMeals = meals.where((meal) {
       if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) return false;
       if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) return false;
       if (_selectedFilters[Filter.veg]! && !meal.isVegetarian) return false;
@@ -58,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
 
     if (_selectedIndex == 1) {
       _content = MealsScreen(
-          meals: dummyMeals.where((meal) => meal.isFavorite).toList(),
+          meals: meals.where((meal) => meal.isFavorite).toList(),
           changeState: () {
             _changeScreen(_selectedIndex);
           });

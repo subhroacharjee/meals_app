@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meals_app/src/screens/main_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
           ),
           textTheme: GoogleFonts.robotoMonoTextTheme()),
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
