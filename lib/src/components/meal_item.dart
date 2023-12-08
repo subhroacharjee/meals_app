@@ -4,9 +4,11 @@ import 'package:meals_app/src/screens/meal_details.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem({super.key, required this.meal, required this.changeState});
+  const MealItem({
+    super.key,
+    required this.meal,
+  });
   final Meal meal;
-  final void Function() changeState;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -19,7 +21,6 @@ class MealItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (ctx) => MealDetailsScreen(
                 meal: meal,
-                changeState: changeState,
               ),
             ),
           );

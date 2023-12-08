@@ -25,7 +25,6 @@ class CategoryButton extends StatelessWidget {
                     (meal) => meal.categories.any((categoryId) => categoryId == category.id),
                   )
                   .toList(),
-              changeState: () {},
             ),
           ),
         );

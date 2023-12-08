@@ -17,25 +17,15 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   String _title = "Categories";
   int _selectedIndex = 0;
   late Widget _content;
-  Map<Filter, bool> _selectedFilters = {
-    Filter.veg: false,
-    Filter.lactoseFree: false,
-    Filter.glutenFree: false,
-  };
 
-  void _onDrawerPressed(String identifier) async {
+  void _onDrawerPressed(String identifier) {
     Navigator.pop(context);
     if (identifier == "filters") {
-      final result = await Navigator.of(context).push<Map<Filter, bool>>(
+      Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
-          builder: (ctx) => FiltersScreen(
-            filters: _selectedFilters,
-          ),
+          builder: (ctx) => const FiltersScreen(),
         ),
       );
-      setState(() {
-        _selectedFilters = result ?? _selectedFilters;
-      });
     }
   }
 
@@ -48,22 +38,14 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final meals = ref.watch(mealsProvider);
-    final availableMeals = meals.where((meal) {
-      if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) return false;
-      if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) return false;
-      if (_selectedFilters[Filter.veg]! && !meal.isVegetarian) return false;
-      return true;
-    }).toList();
 
-    _content = CategoriesScreen(meals: availableMeals);
+    _content = const CategoriesScreen();
     _title = "Categories";
 
     if (_selectedIndex == 1) {
       _content = MealsScreen(
-          meals: meals.where((meal) => meal.isFavorite).toList(),
-          changeState: () {
-            _changeScreen(_selectedIndex);
-          });
+        meals: meals.where((meal) => meal.isFavorite).toList(),
+      );
       _title = "Favorite Meals";
     }
     return Scaffold(
